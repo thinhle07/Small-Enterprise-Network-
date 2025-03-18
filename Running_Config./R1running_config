@@ -1,0 +1,118 @@
+Building configuration...
+
+Current configuration : 1919 bytes
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname R1
+!
+!
+!
+!
+ip dhcp excluded-address 192.168.10.1 192.168.10.99
+ip dhcp excluded-address 192.168.15.1 192.168.15.99
+ip dhcp excluded-address 192.168.20.1 192.168.20.99
+!
+ip dhcp pool Sales-Wired
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ip dhcp pool Sales-Wireless
+ network 192.168.15.0 255.255.255.0
+ default-router 192.168.15.1
+ip dhcp pool IT
+ network 192.168.20.0 255.255.255.0
+ default-router 192.168.20.1
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO2911/K9 sn FTX15246OSI-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ ip nat inside
+!
+interface GigabitEthernet0/0.15
+ encapsulation dot1Q 15
+ ip address 192.168.15.1 255.255.255.0
+ ip nat inside
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1.20
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ ip access-group 10 in
+ ip nat inside
+!
+interface GigabitEthernet0/2
+ ip address 203.0.113.1 255.255.255.0
+ ip nat outside
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ip nat inside source list 1 interface GigabitEthernet0/2 overload
+ip classless
+!
+ip flow-export version 9
+!
+!
+access-list 1 permit 192.168.10.0 0.0.0.255
+access-list 1 permit 192.168.15.0 0.0.0.255
+access-list 1 permit 192.168.20.0 0.0.0.255
+access-list 110 deny ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
+access-list 110 deny ip 192.168.20.0 0.0.0.255 192.168.15.0 0.0.0.255
+access-list 110 permit ip any any
+!
+!
+!
+!
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end
